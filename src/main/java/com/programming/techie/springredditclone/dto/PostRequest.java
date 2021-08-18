@@ -1,5 +1,6 @@
 package com.programming.techie.springredditclone.dto;
 
+import com.programming.techie.springredditclone.model.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostRequest {
     private Long postId;
-    private String subredditName;
-    private String postName;
-    private String url;
+    private Category category;
     private String description;
 }

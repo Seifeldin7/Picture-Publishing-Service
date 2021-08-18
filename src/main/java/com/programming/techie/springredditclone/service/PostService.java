@@ -1,21 +1,23 @@
 package com.programming.techie.springredditclone.service;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import com.programming.techie.springredditclone.dto.PostRequest;
 import com.programming.techie.springredditclone.dto.PostResponse;
 import com.programming.techie.springredditclone.exceptions.PostNotFoundException;
-import com.programming.techie.springredditclone.exceptions.SubredditNotFoundException;
 import com.programming.techie.springredditclone.mapper.PostMapper;
 import com.programming.techie.springredditclone.model.Post;
-import com.programming.techie.springredditclone.model.Subreddit;
 import com.programming.techie.springredditclone.model.User;
 import com.programming.techie.springredditclone.repository.PostRepository;
-import com.programming.techie.springredditclone.repository.SubredditRepository;
 import com.programming.techie.springredditclone.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,15 +30,18 @@ import static java.util.stream.Collectors.toList;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final SubredditRepository subredditRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
     private final PostMapper postMapper;
 
-    public void save(PostRequest postRequest) {
-        Subreddit subreddit = subredditRepository.findByName(postRequest.getSubredditName())
-                .orElseThrow(() -> new SubredditNotFoundException(postRequest.getSubredditName()));
-        postRepository.save(postMapper.map(postRequest, subreddit, authService.getCurrentUser()));
+    public void save(MultipartFile imageFile, PostRequest postRequest) throws Exception {
+        Path currentPath = Paths.get(".");
+        Path absolutePath = currentPath.toAbsolutePath();
+        String url = absolutePath + "/src/main/resources/static/photos/" + imageFile.getOriginalFilename();
+        byte[] bytes = imageFile.getBytes();
+        Path path = Paths.get(url);
+        Files.write(path, bytes);
+        postRepository.save(postMapper.map(postRequest, url, authService.getCurrentUser()));
     }
 
     @Transactional(readOnly = true)
@@ -52,14 +57,6 @@ public class PostService {
                 .stream()
                 .map(postMapper::mapToDto)
                 .collect(toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<PostResponse> getPostsBySubreddit(Long subredditId) {
-        Subreddit subreddit = subredditRepository.findById(subredditId)
-                .orElseThrow(() -> new SubredditNotFoundException(subredditId.toString()));
-        List<Post> posts = postRepository.findAllBySubreddit(subreddit);
-        return posts.stream().map(postMapper::mapToDto).collect(toList());
     }
 
     @Transactional(readOnly = true)
