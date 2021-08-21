@@ -1,5 +1,8 @@
 package com.programming.techie.springredditclone.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,13 +15,18 @@ import com.programming.techie.springredditclone.model.Post;
 import com.programming.techie.springredditclone.model.User;
 import com.programming.techie.springredditclone.repository.PostRepository;
 import com.programming.techie.springredditclone.repository.UserRepository;
+import com.programming.techie.springredditclone.util.FileUploadUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -31,17 +39,17 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final AuthService authService;
     private final PostMapper postMapper;
 
     public void save(MultipartFile imageFile, PostRequest postRequest) throws Exception {
         Path currentPath = Paths.get(".");
         Path absolutePath = currentPath.toAbsolutePath();
-        String url = absolutePath + "/src/main/resources/static/photos/" + imageFile.getOriginalFilename();
-        byte[] bytes = imageFile.getBytes();
-        Path path = Paths.get(url);
-        Files.write(path, bytes);
-        postRepository.save(postMapper.map(postRequest, url, authService.getCurrentUser()));
+        String uploadDir = absolutePath + "/src/main/resources/static/images/";
+        String imgName = StringUtils.cleanPath(imageFile.getOriginalFilename());
+        FileUploadUtil.saveFile(uploadDir, imgName, imageFile);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByEmail(auth.getPrincipal().toString());
+        postRepository.save(postMapper.map(postRequest, imgName, user));
     }
 
     @Transactional(readOnly = true)
@@ -52,20 +60,33 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponse> getAllPosts() {
-        return postRepository.findAll()
+    public List<PostResponse> getAcceptedPosts() {
+        return postRepository.getAcceptedPosts()
                 .stream()
                 .map(postMapper::mapToDto)
                 .collect(toList());
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponse> getPostsByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
-        return postRepository.findByUser(user)
+    public List<PostResponse> getPendingPosts() {
+        return postRepository.getPendingPosts()
                 .stream()
                 .map(postMapper::mapToDto)
                 .collect(toList());
     }
+
+    public void acceptPost(Long id) {
+        postRepository.acceptPost(id);
+    }
+
+    public void rejectPost(Long id) {
+        postRepository.rejectPost(id);
+        PostResponse p = getPost(id);
+        Path currentPath = Paths.get(".");
+        Path absolutePath = currentPath.toAbsolutePath();
+        String uploadDir = absolutePath + "/src/main/resources/static/images/";
+        File fileToDelete = new File(uploadDir + p.getImgName());
+        boolean success = fileToDelete.delete();
+    }
+
 }

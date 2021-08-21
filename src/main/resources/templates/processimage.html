@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://wwww.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1"/>
+    <title>Picture Publishing Service</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <meta th:name="${_csrf.parameterName}" th:content="${_csrf.token}"/>
+
+    <style>
+  .ui-autocomplete-loading {
+    background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;
+  }
+  </style>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+</head>
+<body>
+
+    <div th:replace="fragments/topnav :: navbar">
+    </div>
+
+    <br/>
+    <h1>Process Image</h1>
+    <img  th:src="@{'/images/' + ${post.imgName}}"/>
+    <p th:text="${post.description}"></p>
+    <p th:text="${post.category}"></p>
+    <button type="button" id="accept" class="btn btn-primary">Accept</button>
+    <button type="button" id="reject" class="btn btn-danger">Reject</button>
+    <input id="postIdInput" th:value="${post.id}" hidden>
+    <script type="text/javascript">
+    var token = $("meta[name='_csrf']").attr("content");
+        $('#accept').click(function(e) {
+            $.ajax({
+            type: "POST",
+            headers: {"X-CSRF-TOKEN": token},
+            url: "/admin/accept-post",
+            data: {
+                postId: $("#postIdInput").val(),
+
+            },
+            success: function (result) {
+            },
+            error: function (result) {
+            }
+            });
+        });
+        $('#reject').click(function(e) {
+        $.ajax({
+            type: "POST",
+            headers: {"X-CSRF-TOKEN": token},
+            url: "/admin/reject-post",
+            data: {
+                postId: $("#postIdInput").val(),
+            },
+            success: function (result) {
+            },
+            error: function (result) {
+            }
+            });
+        });
+    </script>
+</body>
+</html>

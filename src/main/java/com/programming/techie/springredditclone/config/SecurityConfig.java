@@ -1,68 +1,85 @@
 package com.programming.techie.springredditclone.config;
 
-import com.programming.techie.springredditclone.security.JwtAuthenticationFilter;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+@Configuration
 @EnableWebSecurity
-@AllArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
-    private final UserDetailsService userDetailsService;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    @Override
-    public void configure(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity.cors().and()
-//                .csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers("/api/auth/**")
-//                .permitAll()
-//                .antMatchers(HttpMethod.GET, "/")
-//                .permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/posts/")
-//                .permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/posts/**")
-//                .permitAll()
-//                .antMatchers("/v2/api-docs",
-//                        "/configuration/ui",
-//                        "/swagger-resources/**",
-//                        "/configuration/security",
-//                        "/swagger-ui.html",
-//                        "/webjars/**")
-//                .permitAll()
-//                .anyRequest()
-//                .authenticated();
-        httpSecurity.addFilterBefore(jwtAuthenticationFilter,
-                UsernamePasswordAuthenticationFilter.class);
-    }
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
+    @Bean
+    public UserDetailsService userDetailsService() throws Exception {
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        manager.createUser(User.withUsername("user").password(encoder().encode("userPass")).roles("USER").build());
+        manager.createUser(User.withUsername("admin").password(encoder().encode("adminPass")).roles("ADMIN").build());
+        return manager;
     }
 
     @Bean
-    PasswordEncoder passwordEncoder() {
+    public static PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Configuration
+    @Order(1)
+    public static class App1ConfigurationAdapter extends WebSecurityConfigurerAdapter {
+
+        public App1ConfigurationAdapter() {
+            super();
+        }
+
+        @Override
+        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+            auth.inMemoryAuthentication().withUser("admin").password(encoder().encode("admin")).roles("ADMIN");
+        }
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .antMatcher("/admin/**")
+                    .authorizeRequests().anyRequest().authenticated()
+                    .and().formLogin().loginPage("/admin/login")
+                    .defaultSuccessUrl("/admin/dashboard", true)
+                    .permitAll()
+                    .and().logout().logoutUrl("/admin/logout").logoutSuccessUrl("/admin/login");
+            http.csrf().disable();
+        }
+    }
+
+    @Configuration
+    @Order(2)
+    public static class App2ConfigurationAdapter extends WebSecurityConfigurerAdapter {
+
+        public App2ConfigurationAdapter() {
+            super();
+        }
+
+        @Override
+        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+            auth.inMemoryAuthentication().withUser("user").password(encoder().encode("user")).roles("USER");
+        }
+
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .antMatcher("/**")
+                    .authorizeRequests().anyRequest().authenticated()
+                    .and().formLogin().loginPage("/login")
+                    .defaultSuccessUrl("/dashboard", true)
+                    .permitAll()
+                    .and().logout().logoutSuccessUrl("/login");
+
+            http.csrf().disable();
+        }
+    }
+
 }

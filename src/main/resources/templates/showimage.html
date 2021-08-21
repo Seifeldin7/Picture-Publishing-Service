@@ -7,6 +7,11 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
+    <style>
+  .ui-autocomplete-loading {
+    background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;
+  }
+  </style>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
@@ -16,10 +21,8 @@
 </div>
 
 <br/>
-    <tr th:each="post: ${posts}">
-        <div>
-            <a th:href="@{/show-image(imgName=${post.imgName})}"><td th:text="${post.imgName}" /></a>
-        </div>
-    </tr>
+<h1>Images</h1>
+<img  th:src="@{'/images/' + ${imgName}}"/>
+
 </body>
 </html>

@@ -8,6 +8,7 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 import static javax.persistence.FetchType.LAZY;
@@ -18,16 +19,17 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "posts")
 public class Post {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long postId;
-    @NotBlank(message = "Post must have a category")
+    @NotNull
     private Category category;
-    @Nullable
-    private String url;
-    @Nullable
-    private String fileName;
+    @NotNull
+    private Status status;
+    @NotNull
+    private String imgName;
     @Nullable
     @Lob
     private String description;

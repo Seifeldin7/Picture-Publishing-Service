@@ -12,14 +12,16 @@
 </head>
 <body>
 
-<div th:replace="fragments/topnav :: navbar">
-</div>
+    <div th:replace="fragments/topnav :: navbar">
+    </div>
 
-<br/>
-    <tr th:each="post: ${posts}">
+    <br/>
+    <div th:each="post: ${posts}">
         <div>
-            <a th:href="@{/show-image(imgName=${post.imgName})}"><td th:text="${post.imgName}" /></a>
+            <a th:href="@{/admin/process-image(postId=${post.id})}">
+                <img  th:src="@{'/images/' + ${post.imgName}}"/>
+            </a>
         </div>
-    </tr>
+    </div>
 </body>
 </html>

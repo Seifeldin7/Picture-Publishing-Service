@@ -1,6 +1,6 @@
 package com.programming.techie.springredditclone.model;
 
 public enum Category {
-    LIVING_THING, MACHINE, NATURE
+    LIVING_THINGS, MACHINES, NATURE
     ;
 }
