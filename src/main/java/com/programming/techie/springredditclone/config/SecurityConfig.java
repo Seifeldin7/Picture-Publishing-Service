@@ -1,9 +1,13 @@
 package com.programming.techie.springredditclone.config;
 
+import com.programming.techie.springredditclone.service.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,73 +17,32 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import javax.sql.DataSource;
+
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
-    @Bean
-    public UserDetailsService userDetailsService() throws Exception {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("user").password(encoder().encode("userPass")).roles("USER").build());
-        manager.createUser(User.withUsername("admin").password(encoder().encode("adminPass")).roles("ADMIN").build());
-        return manager;
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(customUserDetailsService);
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+       // http.csrf().disable();
+        http.authorizeRequests().antMatchers("/signup").permitAll().and().authorizeRequests()
+                .antMatchers("/user/**","/admin/**").authenticated().and().
+                formLogin();
     }
 
     @Bean
-    public static PasswordEncoder encoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Configuration
-    @Order(1)
-    public static class App1ConfigurationAdapter extends WebSecurityConfigurerAdapter {
-
-        public App1ConfigurationAdapter() {
-            super();
-        }
-
-        @Override
-        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth.inMemoryAuthentication().withUser("admin").password(encoder().encode("admin")).roles("ADMIN");
-        }
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                    .antMatcher("/admin/**")
-                    .authorizeRequests().anyRequest().authenticated()
-                    .and().formLogin().loginPage("/admin/login")
-                    .defaultSuccessUrl("/admin/dashboard", true)
-                    .permitAll()
-                    .and().logout().logoutUrl("/admin/logout").logoutSuccessUrl("/admin/login");
-            http.csrf().disable();
-        }
-    }
-
-    @Configuration
-    @Order(2)
-    public static class App2ConfigurationAdapter extends WebSecurityConfigurerAdapter {
-
-        public App2ConfigurationAdapter() {
-            super();
-        }
-
-        @Override
-        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth.inMemoryAuthentication().withUser("user").password(encoder().encode("user")).roles("USER");
-        }
-
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                    .antMatcher("/**")
-                    .authorizeRequests().anyRequest().authenticated()
-                    .and().formLogin().loginPage("/login")
-                    .defaultSuccessUrl("/dashboard", true)
-                    .permitAll()
-                    .and().logout().logoutSuccessUrl("/login");
-
-            http.csrf().disable();
-        }
-    }
 
 }

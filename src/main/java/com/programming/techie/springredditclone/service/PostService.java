@@ -48,7 +48,7 @@ public class PostService {
         String imgName = StringUtils.cleanPath(imageFile.getOriginalFilename());
         FileUploadUtil.saveFile(uploadDir, imgName, imageFile);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmail(auth.getPrincipal().toString());
+        User user = userRepository.findByEmail(auth.getName());
         postRepository.save(postMapper.map(postRequest, imgName, user));
     }
 

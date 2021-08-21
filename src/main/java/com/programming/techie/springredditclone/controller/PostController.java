@@ -2,13 +2,15 @@ package com.programming.techie.springredditclone.controller;
 
 import com.programming.techie.springredditclone.dto.PostRequest;
 import com.programming.techie.springredditclone.dto.PostResponse;
-import com.programming.techie.springredditclone.model.Category;
-import com.programming.techie.springredditclone.model.Post;
-import com.programming.techie.springredditclone.model.Status;
-import com.programming.techie.springredditclone.model.User;
+import com.programming.techie.springredditclone.model.*;
 import com.programming.techie.springredditclone.repository.UserRepository;
+import com.programming.techie.springredditclone.service.CustomUserDetailsService;
 import com.programming.techie.springredditclone.service.PostService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,18 +25,31 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
-    private final UserRepository userRepo;
+    private final UserRepository userRepository;
 
-    @RequestMapping("/dashboard")
+    @RequestMapping("/")
     public ModelAndView index() {
         List<PostResponse> posts = postService.getAcceptedPosts();
         ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByEmail(auth.getName());
         modelAndView.setViewName("start.html");
         modelAndView.addObject("posts", posts);
+        modelAndView.addObject("userRole", user.getRoles());
         return modelAndView;
     }
 
+    @RequestMapping("/user/upload")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    public ModelAndView upload() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("upload.html");
+        return modelAndView;
+    }
+
+
     @RequestMapping("/admin/dashboard")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ModelAndView admin() {
         List<PostResponse> posts = postService.getPendingPosts();
         ModelAndView modelAndView = new ModelAndView();
@@ -52,6 +67,7 @@ public class PostController {
     }
 
     @RequestMapping("/admin/process-image")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ModelAndView processImage(@RequestParam Long postId) {
         PostResponse post = postService.getPost(postId);
         ModelAndView modelAndView = new ModelAndView();
@@ -60,30 +76,14 @@ public class PostController {
         return modelAndView;
     }
 
-    @RequestMapping("/signup")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
-        return "signup";
-    }
-
-    @PostMapping("/process_register")
-    public String processRegister(User user) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-
-        userRepo.save(user);
-
-        return "register_success";
-    }
-
-    @PostMapping(value="/create-post")
+    @PostMapping(value="/user/create-post")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public ModelAndView createPost(@ModelAttribute(name = "postRequest") PostRequest postRequest,
                                    @RequestParam("imageFile") MultipartFile imageFile) {
         ModelAndView modelAndView = new ModelAndView();
         try {
             postRequest.setCategory(Category.valueOf(postRequest.getCat().toUpperCase()));
-            postRequest.setStatus(Status.ACCEPTED);
+            postRequest.setStatus(Status.PENDING);
             postService.save(imageFile, postRequest);
 
         } catch (Exception e) {
@@ -97,6 +97,7 @@ public class PostController {
     }
 
     @PostMapping(value="/admin/accept-post")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ModelAndView acceptPost(@RequestParam("postId") Long id) {
         ModelAndView modelAndView = new ModelAndView();
         try {
@@ -113,6 +114,7 @@ public class PostController {
     }
 
     @PostMapping(value="/admin/reject-post")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ModelAndView rejectPost(@RequestParam("postId") Long id) {
         ModelAndView modelAndView = new ModelAndView();
         try {

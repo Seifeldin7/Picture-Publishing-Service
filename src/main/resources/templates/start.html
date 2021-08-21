@@ -19,7 +19,14 @@
     <tr th:each="post: ${posts}">
         <div>
             <a th:href="@{/show-image(imgName=${post.imgName})}"><td th:text="${post.imgName}" /></a>
+            <hr />
         </div>
     </tr>
+    <div th:if="${userRole == 'ADMIN'}">
+        <a href="/admin/dashboard">Dashboard</a>
+    </div>
+    <div th:if="${userRole == 'USER'}">
+        <a href="/user/upload">Upload Image</a>
+    </div>
 </body>
 </html>
