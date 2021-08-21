@@ -22,7 +22,7 @@ public abstract class PostMapper {
     public abstract PostResponse mapToDto(Post post);
 
     String getDuration(Post post) {
-        return TimeAgo.using(post.getCreatedDate().toEpochMilli());
+        return post.getCreatedDate() !=null ? TimeAgo.using(post.getCreatedDate().toEpochMilli()) : null;
     }
 
 
