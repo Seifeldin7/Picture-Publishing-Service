@@ -42,7 +42,7 @@ public class AuthController {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
 
         user.setPassword(encodedPassword);
-        user.setRoles("ADMIN");
+        user.setRoles("USER");
         userRepo.save(user);
 
         return "upload.html";
