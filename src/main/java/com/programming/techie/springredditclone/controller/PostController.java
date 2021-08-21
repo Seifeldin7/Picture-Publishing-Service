@@ -35,7 +35,8 @@ public class PostController {
         User user = userRepository.findByEmail(auth.getName());
         modelAndView.setViewName("start.html");
         modelAndView.addObject("posts", posts);
-        modelAndView.addObject("userRole", user.getRoles());
+        if(user != null)
+            modelAndView.addObject("userRole", user.getRoles());
         return modelAndView;
     }
 
@@ -108,7 +109,7 @@ public class PostController {
             modelAndView.setViewName("error");
             return modelAndView;
         }
-        modelAndView.setViewName("success");
+        modelAndView.setViewName("admin/dashboard");
         return modelAndView;
 
     }
@@ -125,7 +126,7 @@ public class PostController {
             modelAndView.setViewName("error");
             return modelAndView;
         }
-        modelAndView.setViewName("success");
+        modelAndView.setViewName("admin/dashboard");
         return modelAndView;
 
     }
