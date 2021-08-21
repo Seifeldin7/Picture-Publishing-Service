@@ -1,0 +1,541 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.4
+-- Dumped by pg_dump version 13.3
+
+-- Started on 2021-08-21 22:27:02
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 203 (class 1259 OID 16518)
+-- Name: posts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.posts (
+    post_id bigint NOT NULL,
+    category integer NOT NULL,
+    created_date timestamp without time zone,
+    description text,
+    img_name character varying(255),
+    user_id bigint,
+    status integer NOT NULL
+);
+
+
+ALTER TABLE public.posts OWNER TO postgres;
+
+--
+-- TOC entry 202 (class 1259 OID 16516)
+-- Name: posts_post_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.posts_post_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.posts_post_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3029 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: posts_post_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.posts_post_id_seq OWNED BY public.posts.post_id;
+
+
+--
+-- TOC entry 201 (class 1259 OID 16481)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    user_id bigint NOT NULL,
+    created timestamp without time zone,
+    email character varying(255),
+    enabled boolean NOT NULL,
+    password character varying(255),
+    username character varying(255),
+    roles character varying(255)
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- TOC entry 200 (class 1259 OID 16479)
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_user_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3030 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
+
+
+--
+-- TOC entry 2859 (class 2604 OID 16521)
+-- Name: posts post_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts ALTER COLUMN post_id SET DEFAULT nextval('public.posts_post_id_seq'::regclass);
+
+
+--
+-- TOC entry 2858 (class 2604 OID 16484)
+-- Name: users user_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.users_user_id_seq'::regclass);
+
+
+--
+-- TOC entry 2999 (class 2613 OID 16515)
+-- Name: 16515; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16515');
+
+
+ALTER LARGE OBJECT 16515 OWNER TO postgres;
+
+--
+-- TOC entry 3000 (class 2613 OID 16533)
+-- Name: 16533; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16533');
+
+
+ALTER LARGE OBJECT 16533 OWNER TO postgres;
+
+--
+-- TOC entry 3001 (class 2613 OID 16534)
+-- Name: 16534; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16534');
+
+
+ALTER LARGE OBJECT 16534 OWNER TO postgres;
+
+--
+-- TOC entry 3002 (class 2613 OID 16535)
+-- Name: 16535; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16535');
+
+
+ALTER LARGE OBJECT 16535 OWNER TO postgres;
+
+--
+-- TOC entry 3003 (class 2613 OID 16540)
+-- Name: 16540; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16540');
+
+
+ALTER LARGE OBJECT 16540 OWNER TO postgres;
+
+--
+-- TOC entry 3004 (class 2613 OID 16578)
+-- Name: 16578; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16578');
+
+
+ALTER LARGE OBJECT 16578 OWNER TO postgres;
+
+--
+-- TOC entry 3005 (class 2613 OID 16579)
+-- Name: 16579; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16579');
+
+
+ALTER LARGE OBJECT 16579 OWNER TO postgres;
+
+--
+-- TOC entry 3006 (class 2613 OID 16584)
+-- Name: 16584; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16584');
+
+
+ALTER LARGE OBJECT 16584 OWNER TO postgres;
+
+--
+-- TOC entry 3007 (class 2613 OID 16585)
+-- Name: 16585; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16585');
+
+
+ALTER LARGE OBJECT 16585 OWNER TO postgres;
+
+--
+-- TOC entry 3008 (class 2613 OID 16586)
+-- Name: 16586; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16586');
+
+
+ALTER LARGE OBJECT 16586 OWNER TO postgres;
+
+--
+-- TOC entry 3009 (class 2613 OID 16587)
+-- Name: 16587; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16587');
+
+
+ALTER LARGE OBJECT 16587 OWNER TO postgres;
+
+--
+-- TOC entry 3010 (class 2613 OID 16588)
+-- Name: 16588; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16588');
+
+
+ALTER LARGE OBJECT 16588 OWNER TO postgres;
+
+--
+-- TOC entry 3011 (class 2613 OID 16603)
+-- Name: 16603; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16603');
+
+
+ALTER LARGE OBJECT 16603 OWNER TO postgres;
+
+--
+-- TOC entry 3012 (class 2613 OID 16604)
+-- Name: 16604; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16604');
+
+
+ALTER LARGE OBJECT 16604 OWNER TO postgres;
+
+--
+-- TOC entry 3013 (class 2613 OID 16606)
+-- Name: 16606; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16606');
+
+
+ALTER LARGE OBJECT 16606 OWNER TO postgres;
+
+--
+-- TOC entry 3014 (class 2613 OID 16607)
+-- Name: 16607; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16607');
+
+
+ALTER LARGE OBJECT 16607 OWNER TO postgres;
+
+--
+-- TOC entry 3015 (class 2613 OID 16608)
+-- Name: 16608; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16608');
+
+
+ALTER LARGE OBJECT 16608 OWNER TO postgres;
+
+--
+-- TOC entry 3016 (class 2613 OID 16609)
+-- Name: 16609; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16609');
+
+
+ALTER LARGE OBJECT 16609 OWNER TO postgres;
+
+--
+-- TOC entry 3017 (class 2613 OID 16610)
+-- Name: 16610; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16610');
+
+
+ALTER LARGE OBJECT 16610 OWNER TO postgres;
+
+--
+-- TOC entry 3018 (class 2613 OID 16611)
+-- Name: 16611; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16611');
+
+
+ALTER LARGE OBJECT 16611 OWNER TO postgres;
+
+--
+-- TOC entry 3019 (class 2613 OID 16616)
+-- Name: 16616; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16616');
+
+
+ALTER LARGE OBJECT 16616 OWNER TO postgres;
+
+--
+-- TOC entry 3020 (class 2613 OID 16617)
+-- Name: 16617; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16617');
+
+
+ALTER LARGE OBJECT 16617 OWNER TO postgres;
+
+--
+-- TOC entry 3021 (class 2613 OID 16618)
+-- Name: 16618; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16618');
+
+
+ALTER LARGE OBJECT 16618 OWNER TO postgres;
+
+--
+-- TOC entry 3022 (class 2613 OID 16619)
+-- Name: 16619; Type: BLOB; Schema: -; Owner: postgres
+--
+
+SELECT pg_catalog.lo_create('16619');
+
+
+ALTER LARGE OBJECT 16619 OWNER TO postgres;
+
+--
+-- TOC entry 2998 (class 0 OID 16518)
+-- Dependencies: 203
+-- Data for Name: posts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2996 (class 0 OID 16481)
+-- Dependencies: 201
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.users (user_id, created, email, enabled, password, username, roles) VALUES (3, NULL, 's.seif@yahoo.com', false, '$2a$10$kBjk6JjSSABHWTwbxWJ1W.Rc3tsIpOQdRksm97t1PiczK0M6yI1x6', NULL, NULL);
+INSERT INTO public.users (user_id, created, email, enabled, password, username, roles) VALUES (4, NULL, 'seif@yahoo.com', false, '$2a$10$k4pH9Q2vamBjIAKYU5TGNO./RNQLWlnkF3NgidA9pCWJZ5Ie98uOq', NULL, 'USER');
+INSERT INTO public.users (user_id, created, email, enabled, password, username, roles) VALUES (5, NULL, 'seif@gmail.com', true, '123456', NULL, 'ADMIN');
+INSERT INTO public.users (user_id, created, email, enabled, password, username, roles) VALUES (6, NULL, 'sd@y.v', false, '$2a$10$p3w443bl4Gv/iWumZKGvGey14AkznVaveq5W/75htkdT2bwvlGW9W', NULL, 'USER');
+INSERT INTO public.users (user_id, created, email, enabled, password, username, roles) VALUES (7, NULL, 'admin@admin.com', false, '$2a$10$2bwSJ.f4DX7sUXdDrNJz1.y8HJyXibC9yyMBBt5budv8PwnUM9VfO', NULL, 'ADMIN');
+
+
+--
+-- TOC entry 3031 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: posts_post_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.posts_post_id_seq', 23, true);
+
+
+--
+-- TOC entry 3032 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_user_id_seq', 7, true);
+
+
+--
+-- TOC entry 3023 (class 0 OID 0)
+-- Data for Name: BLOBS; Type: BLOBS; Schema: -; Owner: -
+--
+
+BEGIN;
+
+SELECT pg_catalog.lo_open('16515', 131072);
+SELECT pg_catalog.lowrite(0, '\x646573');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16533', 131072);
+SELECT pg_catalog.lowrite(0, '\x646573');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16534', 131072);
+SELECT pg_catalog.lowrite(0, '\x646573');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16535', 131072);
+SELECT pg_catalog.lowrite(0, '\x646573');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16540', 131072);
+SELECT pg_catalog.lowrite(0, '\x646573');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16578', 131072);
+SELECT pg_catalog.lowrite(0, '\x646573');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16579', 131072);
+SELECT pg_catalog.lowrite(0, '\x646573');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16584', 131072);
+SELECT pg_catalog.lowrite(0, '\x646573');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16585', 131072);
+SELECT pg_catalog.lowrite(0, '\x617363');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16586', 131072);
+SELECT pg_catalog.lowrite(0, '\x617363');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16587', 131072);
+SELECT pg_catalog.lowrite(0, '\x617363');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16588', 131072);
+SELECT pg_catalog.lowrite(0, '\x617363');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16603', 131072);
+SELECT pg_catalog.lowrite(0, '\x617363');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16604', 131072);
+SELECT pg_catalog.lowrite(0, '\x617363');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16606', 131072);
+SELECT pg_catalog.lowrite(0, '\x6465736372697074696f6e31');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16607', 131072);
+SELECT pg_catalog.lowrite(0, '\x6465736372697074696f6e32');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16608', 131072);
+SELECT pg_catalog.lowrite(0, '\x6465736372697074696f6e31');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16609', 131072);
+SELECT pg_catalog.lowrite(0, '\x6465736372697074696f6e32');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16610', 131072);
+SELECT pg_catalog.lowrite(0, '\x6465736372697074696f6e31');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16611', 131072);
+SELECT pg_catalog.lowrite(0, '\x6465736372697074696f6e32');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16616', 131072);
+SELECT pg_catalog.lowrite(0, '\x6465736372697074696f6e31');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16617', 131072);
+SELECT pg_catalog.lowrite(0, '\x6465736372697074696f6e32');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16618', 131072);
+SELECT pg_catalog.lowrite(0, '\x6465736372697074696f6e31');
+SELECT pg_catalog.lo_close(0);
+
+SELECT pg_catalog.lo_open('16619', 131072);
+SELECT pg_catalog.lowrite(0, '\x6465736372697074696f6e32');
+SELECT pg_catalog.lo_close(0);
+
+COMMIT;
+
+--
+-- TOC entry 2863 (class 2606 OID 16526)
+-- Name: posts posts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_pkey PRIMARY KEY (post_id);
+
+
+--
+-- TOC entry 2861 (class 2606 OID 16489)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- TOC entry 2864 (class 2606 OID 16527)
+-- Name: posts fk5lidm6cqbc7u4xhqpxm898qme; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT fk5lidm6cqbc7u4xhqpxm898qme FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+-- Completed on 2021-08-21 22:27:03
+
+--
+-- PostgreSQL database dump complete
+--
+
