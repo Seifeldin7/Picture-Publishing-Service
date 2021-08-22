@@ -21,18 +21,31 @@
 </head>
 <body>
 
-    <div th:replace="fragments/topnav :: navbar">
-    </div>
+<div th:replace="fragments/topnav :: navbar">
+</div>
 
-    <br/>
-    <h1>Process Image</h1>
-    <img  th:src="@{'/images/' + ${post.imgName}}"/>
-    <p th:text="${post.description}"></p>
-    <p th:text="${post.category}"></p>
-    <button type="button" id="accept" class="btn btn-primary">Accept</button>
-    <button type="button" id="reject" class="btn btn-danger">Reject</button>
+<br/>
+<div class="container">
+    <div class="row">
+        <h1>Process Image</h1>
+    </div>
+    <div class="row">
+        <img  th:src="@{'/images/' + ${post.imgName}}" height="400px"/>
+    </div>
+    <div class="row">
+        <p th:text="${post.description}"></p>
+    </div>
+    <div class="row">
+        <strong>Category: </strong><p th:text="${post.category}"></p>
+    </div>
+    <div class="row">
+        <button type="button" id="accept" class="btn btn-primary">Accept</button>
+        <button type="button" id="reject" class="btn btn-danger">Reject</button>
+    </div>
     <input id="postIdInput" th:value="${post.id}" hidden>
-    <script type="text/javascript">
+
+</div>
+<script type="text/javascript">
     var token = $("meta[name='_csrf']").attr("content");
         $('#accept').click(function(e) {
             $.ajax({

@@ -109,7 +109,7 @@ public class PostController {
             modelAndView.setViewName("error");
             return modelAndView;
         }
-        modelAndView.setViewName("admin/dashboard");
+        modelAndView.setViewName("admin");
         return modelAndView;
 
     }
@@ -126,7 +126,7 @@ public class PostController {
             modelAndView.setViewName("error");
             return modelAndView;
         }
-        modelAndView.setViewName("admin/dashboard");
+        modelAndView.setViewName("admin");
         return modelAndView;
 
     }

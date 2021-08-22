@@ -22,24 +22,25 @@
 
 <br/>
 
-
-<form action="#" th:action="@{/user/create-post}" th:object="${postRequest}" method="POST" enctype="multipart/form-data">
-    <div class="input-group input-group-sm mb-3">
-        <select class="form-select" aria-label="Default select example" field="*{cat}" name="cat">
-            <option value="Living_Things" selected>Living Things</option>
-            <option value="Machines">Machines</option>
-            <option value="Nature">Nature</option>
-        </select>
-    </div>
-    <div class="input-group input-group-sm mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-sm">Description</span>
+<div class="container">
+    <form action="#" th:action="@{/user/create-post}" th:object="${postRequest}" method="POST" enctype="multipart/form-data">
+        <div class="input-group input-group-sm mb-3">
+            <select class="form-select" aria-label="Default select example" field="*{cat}" name="cat">
+                <option value="Living_Things" selected>Living Things</option>
+                <option value="Machines">Machines</option>
+                <option value="Nature">Nature</option>
+            </select>
         </div>
-        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="description" field="*{description}">
-    </div>
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Description</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="description" field="*{description}">
+        </div>
 
-    <input type="file" name="imageFile" accept="image/gif, image/jpeg, image/png">
-    <input type="submit" value="Upload Image"/>
-</form>
+        <input type="file" name="imageFile" accept="image/gif, image/jpeg, image/png">
+        <input type="submit" value="Upload Image"/>
+    </form>
+</div>
 </body>
 </html>

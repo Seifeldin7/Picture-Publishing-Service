@@ -16,8 +16,9 @@
 </div>
 
 <br/>
+<div class="container">
     <tr th:each="post: ${posts}">
-        <div>
+        <div class="row">
             <a th:href="@{/show-image(imgName=${post.imgName})}"><td th:text="${post.imgName}" /></a>
             <hr />
         </div>
@@ -28,5 +29,7 @@
     <div th:if="${userRole == 'USER'}">
         <a href="/user/upload">Upload Image</a>
     </div>
+</div>
+
 </body>
 </html>
