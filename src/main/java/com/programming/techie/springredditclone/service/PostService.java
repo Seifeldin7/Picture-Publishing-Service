@@ -42,9 +42,7 @@ public class PostService {
     private final PostMapper postMapper;
 
     public void save(MultipartFile imageFile, PostRequest postRequest) throws Exception {
-        Path currentPath = Paths.get(".");
-        Path absolutePath = currentPath.toAbsolutePath();
-        String uploadDir = absolutePath + "/src/main/resources/static/images/";
+        String uploadDir = "images/";
         String imgName = StringUtils.cleanPath(imageFile.getOriginalFilename());
         FileUploadUtil.saveFile(uploadDir, imgName, imageFile);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
