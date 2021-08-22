@@ -80,9 +80,7 @@ public class PostService {
     public void rejectPost(Long id) {
         postRepository.rejectPost(id);
         PostResponse p = getPost(id);
-        Path currentPath = Paths.get(".");
-        Path absolutePath = currentPath.toAbsolutePath();
-        String uploadDir = absolutePath + "/src/main/resources/static/images/";
+        String uploadDir = "images/";
         File fileToDelete = new File(uploadDir + p.getImgName());
         boolean success = fileToDelete.delete();
     }
